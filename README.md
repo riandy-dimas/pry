@@ -1,2 +1,2 @@
-# pry
-Shows prayer time based on location
+# Pry
+Show prayer time based on location
