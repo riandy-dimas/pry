@@ -9,11 +9,12 @@ class App extends Component {
     super()
     this.state = {
       city: '',
-      cityId: -1
+      cityId: -1,
+      cities: []
     }
     const timeout = 500
 
-    this._getCityId = _.debounce(this.getCityId, timeout)
+    this._getCities = _.debounce(this.getCities, timeout)
   }
 
   handleChange(value, field) {
@@ -22,7 +23,7 @@ class App extends Component {
     })
     switch (field) {
       case 'city':
-        this._getCityId(value)
+        this._getCities(value)
         break
       default: break
     }
@@ -42,7 +43,7 @@ class App extends Component {
     })
   }
 
-  getCityId (cityName = '') {
+  getCities (cityName = '') {
     console.log('GET_CITY_ID', cityName)
     const CITY_BY_NAME_URL = 'https://api.banghasan.com/sholat/format/json/kota/nama/' + cityName
     fetch(CITY_BY_NAME_URL)
@@ -52,17 +53,14 @@ class App extends Component {
       }
     })
     .then(resultJson => {
-      let kota = {
-        cityId: -1,
-        city: ''
-      }
+      let cities = []
       if (resultJson.kota.length > 0) {
-        kota = resultJson.kota[0]
-        this.setState({
-          city: kota.nama,
-          cityId: kota.id
+        cities = resultJson.kota.map(k => {
+          return {cityName: k.nama, cityId: k.id}
         })
       }
+      console.log('CITIES', cities)
+      this.setState({ cities })
     })
   }
 
