@@ -8,11 +8,12 @@ class App extends Component {
   constructor () {
     super()
     this.state = {
-      city: ''
+      city: '',
+      cityId: -1
     }
     const timeout = 500
 
-    this._getPrayData = _.debounce(this.getPrayData, timeout)
+    this._getCityId = _.debounce(this.getCityId, timeout)
   }
 
   handleChange(value, field) {
@@ -21,7 +22,7 @@ class App extends Component {
     })
     switch (field) {
       case 'city':
-        this._getPrayData(value)
+        this._getCityId(value)
         break
       default: break
     }
@@ -38,6 +39,30 @@ class App extends Component {
     })
     .then(resultJson => {
       console.log('RESULT', { resultJson })
+    })
+  }
+
+  getCityId (cityName = '') {
+    console.log('GET_CITY_ID', cityName)
+    const CITY_BY_NAME_URL = 'https://api.banghasan.com/sholat/format/json/kota/nama/' + cityName
+    fetch(CITY_BY_NAME_URL)
+    .then(result => {
+      if (result.status === 200) {
+        return result.json()
+      }
+    })
+    .then(resultJson => {
+      let kota = {
+        cityId: -1,
+        city: ''
+      }
+      if (resultJson.kota.length > 0) {
+        kota = resultJson.kota[0]
+        this.setState({
+          city: kota.nama,
+          cityId: kota.id
+        })
+      }
     })
   }
 
