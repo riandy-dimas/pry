@@ -10,11 +10,16 @@ class App extends Component {
     this.state = {
       city: '',
       cityId: -1,
-      cities: []
+      cities: [],
+      filter: ''
     }
     const timeout = 500
 
-    this._getCities = _.debounce(this.getCities, timeout)
+    this._getCitiesByName = _.debounce(this.getCitiesByName, timeout)
+  }
+
+  componentDidMount () {
+    this.getAllCity()
   }
 
   handleChange(value, field) {
@@ -23,10 +28,20 @@ class App extends Component {
     })
     switch (field) {
       case 'city':
-        this._getCities(value)
+        this._getCitiesByName(value)
+        break
+      case 'cityId':
+        this.setState({
+          city: this.getLabelFromValue(this.state.cities, value)
+        })
         break
       default: break
     }
+  }
+
+  getLabelFromValue (items = [], value) {
+    const item = items.find((it) => it.value === value)
+    return typeof item !== "undefined" ? item.label : ""
   }
 
   getPrayData (city = '') {
@@ -43,7 +58,26 @@ class App extends Component {
     })
   }
 
-  getCities (cityName = '') {
+  getAllCity () {
+    const PRAY_TIME_URL = 'https://api.banghasan.com/sholat/format/json/kota'
+    fetch(PRAY_TIME_URL)
+    .then(result => {
+      if (result.status === 200) {
+        return result.json()
+      }
+    })
+    .then(resultJson => {
+      let cities = []
+      if (resultJson.kota && resultJson.kota.length > 0) {
+        cities = resultJson.kota.map(k => {
+          return {label: k.nama, value: k.id}
+        })
+      }
+      this.setState({ cities })
+    })
+  }
+
+  getCitiesByName (cityName = '') {
     console.log('GET_CITY_ID', cityName)
     const CITY_BY_NAME_URL = 'https://api.banghasan.com/sholat/format/json/kota/nama/' + cityName
     fetch(CITY_BY_NAME_URL)
@@ -54,25 +88,30 @@ class App extends Component {
     })
     .then(resultJson => {
       let cities = []
-      if (resultJson.kota.length > 0) {
+      if (resultJson.kota && resultJson.kota.length > 0) {
         cities = resultJson.kota.map(k => {
-          return {cityName: k.nama, cityId: k.id}
+          return {label: k.nama, value: k.id}
         })
       }
-      console.log('CITIES', cities)
       this.setState({ cities })
     })
   }
 
   render() {
     const {
-      city
+      city,
+      cities,
+      cityId,
+      filter
     } = this.state
     return (
       <div className="App">
         <Form 
           onChange={this.handleChange.bind(this)}
           city={city}
+          cities={cities}
+          cityId={cityId}
+          filter={filter}
         />
       </div>
     );

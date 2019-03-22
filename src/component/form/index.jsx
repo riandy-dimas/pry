@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 import "./styles.scss";
 
 import Input from "../input";
+import Select from "../select";
 
 class Form extends PureComponent {
   handleChange(field, e) {
@@ -9,8 +10,12 @@ class Form extends PureComponent {
     let { value } = e.target;
     onChange(value, field);
   }
+  handleSelect(value) {
+    const { onChange } = this.props
+    onChange(value, "cityId")
+  }
   render() {
-    const { city = '' } = this.props;
+    const { city, cities, cityId, filter } = this.props;
     return (
       <div className="form">
         <Input
@@ -22,6 +27,15 @@ class Form extends PureComponent {
           placeholder="Selected City"
           className="form--input"
         />
+        <Select 
+          items={cities}
+          value={cityId}
+          valueLabel={city}
+          filter={filter}
+          label="Nama Kota"
+          onChange={this.handleChange.bind(this, "filter")}
+          onSelect={this.handleSelect.bind(this)}
+        />
       </div>
     );
   }
@@ -30,7 +44,10 @@ class Form extends PureComponent {
 Form.defaultProps = {
   onChange: (value, field) => {},
   onCvvBlur: () => {},
-  onCvvFocus: () => {}
+  onCvvFocus: () => {},
+  city: '',
+  cities: [],
+  cityId: -1
 };
 
 export default Form;
