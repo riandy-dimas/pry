@@ -2,27 +2,79 @@ import React, { PureComponent } from 'react'
 import './styles.scss'
 
 class Select extends PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.setWrapperRef = this.setWrapperRef.bind(this);
+    this.handleClickOutside = this.handleClickOutside.bind(this);
+    this.state = {
+      dropdown: false
+    }
+  }
+
+  componentDidMount() {
+    document.addEventListener('mouseup', this.handleClickOutside);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('mouseup', this.handleClickOutside);
+  }
+
+  /**
+   * Set the wrapper ref
+   */
+  setWrapperRef(node) {
+    this.wrapperRef = node;
+  }
+
+  /**
+   * Alert if clicked on outside of element
+   */
+  handleClickOutside(event) {
+    if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
+      this.toggleDropDown(false)
+    }
+  }
+
+  toggleDropDown (value) {
+    this.setState({
+      dropdown: value
+    })
+  }
+
   handleSelect (value) {
+    this.toggleDropDown(false)
     this.props.onSelect(value)
   }
+
+  handleFocus () {
+    this.toggleDropDown(true)
+  }
+  
   render () {
     const {
       items,
       label,
       onChange,
       valueLabel,
-      filter
+      filter,
+      searchPlaceholder,
+      disabled
     } = this.props
+    const {
+      dropdown
+    } = this.state
     return (
-      <div className="select">
+      <div className={`select${disabled ? ' select-disabled' : ''}`}>
         <div className="select--label">
           { label }
         </div>
-        <div className="select--valueLabel">
+        <div className="select--valueLabel" onClick={this.handleFocus.bind(this)}>
           { valueLabel }
         </div>
-        <div className="select--dropdown">
-          <input type="text" onChange={onChange.bind(this)} value={filter}/>
+        <div className={`select--dropdown${dropdown ? ' select--dropdown-active' : ''}`} ref={this.setWrapperRef}>
+          <input type="text" className="select--searchBox" placeholder={searchPlaceholder} onChange={onChange.bind(this)} value={filter}/>
+          <div className="select--items">
           {
             items
             .filter(item => item.label.toLowerCase().indexOf(filter.toLowerCase()) > -1)
@@ -32,12 +84,13 @@ class Select extends PureComponent {
                 value
               } = item
               return (
-                <div key={i} className="select--list" onClick={this.handleSelect.bind(this, value)}>
+                <div key={i} className="select--item" onClick={this.handleSelect.bind(this, value)}>
                   { label }
                 </div>
               )
             })
           }
+          </div>
         </div>
       </div>
     )

@@ -1,7 +1,6 @@
 import React, { PureComponent } from "react";
 import "./styles.scss";
 
-import Input from "../input";
 import Select from "../select";
 
 class Form extends PureComponent {
@@ -13,28 +12,22 @@ class Form extends PureComponent {
   handleSelect(value) {
     const { onChange } = this.props
     onChange(value, "cityId")
+    onChange('', "filter")
   }
   render() {
-    const { city, cities, cityId, filter } = this.props;
+    const { city, cities, cityId, filter, loading } = this.props;
     return (
       <div className="form">
-        <Input
-          type="text"
-          onChange={this.handleChange.bind(this, "city")}
-          label="City"
-          bold
-          value={city}
-          placeholder="Selected City"
-          className="form--input"
-        />
         <Select 
           items={cities}
           value={cityId}
-          valueLabel={city}
+          valueLabel={`${city}${cityId > -1 ? ` (${cityId})` : '' }`}
           filter={filter}
           label="Nama Kota"
           onChange={this.handleChange.bind(this, "filter")}
           onSelect={this.handleSelect.bind(this)}
+          searchPlaceholder="Cari Kota..."
+          disabled={loading}
         />
       </div>
     );

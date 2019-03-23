@@ -1,6 +1,15 @@
+@import url("https://fonts.googleapis.com/css?family=PT+Mono|PT+Sans");
+
 .select {
-    max-height: 200px;
-    overflow: auto;
+    height: fit-content;
+    position: relative;
+    font-family: "PT Sans", sans-serif;
+
+    &-disabled {
+        pointer-events: none;
+        user-select: none;
+        opacity: 0.5;
+    }
 
     &--label {
         font-size: 10px;
@@ -8,5 +17,93 @@
         transition: all 100ms ease;
         line-height: 14px;
         user-select: none;
+        height: 18px;
+    }
+
+    &--valueLabel {
+        box-sizing: border-box;
+        width: 100%;
+        border: none;
+        border-bottom: 2px solid #686868;
+        background: transparent;
+        outline: none;
+        transition: border 300ms ease;
+        height: 17px;
+        font-size: 11px;
+        font-weight: 900;
+        color: #000;
+        text-align: left;
+        padding-left: 1px;
+        cursor: pointer;
+    
+        &::placeholder {
+          // font-style: italic;
+          opacity: 0.5;
+          font-weight: 500;
+        }
+    }
+
+    &--dropdown {
+        position: absolute;
+        max-height: 180px;
+        overflow: auto;
+        border-radius: 5px;
+        border: 2px solid #686868;
+        background: #fff;
+        top: 35px;
+        width: 100%;
+        display: none;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-top: none;
+        box-sizing: border-box;
+        -webkit-box-shadow: 0 10px 10px -4px #777;
+        -moz-box-shadow: 0 10px 10px -4px #777;
+             box-shadow: 0 10px 10px -4px #777;
+
+        &-active {
+            display: block;
+        }
+    }
+
+    &--searchBox {
+        border-radius: 5px;
+        outline: none;
+        border: 1px solid #aaa;
+        height: 24px;
+        margin: 5px 5px;
+        width: calc(100% - 10px);
+        box-sizing: border-box;
+        padding: 0 5px;
+    }
+
+    &--items {
+        max-height: 115px;
+        overflow: auto;
+        padding: 0 0 5px 0;
+        box-sizing: border-box;
+    }
+
+    &--item {
+        cursor: pointer;
+        width: 100%;
+        padding: 5px 0;
+        box-sizing: border-box;
+        border-top: 1px solid #aaa;
+        font-size: 12px;
+        padding-left: 12px;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-transform: capitalize;
+
+        &:last-child {
+            border-bottom: 1px solid #aaa;
+        }
+
+        &:hover {
+            background: darken(#fff, 10%);
+        }
     }
 }

@@ -11,7 +11,8 @@ class App extends Component {
       city: '',
       cityId: -1,
       cities: [],
-      filter: ''
+      filter: '',
+      loading: false
     }
     const timeout = 500
 
@@ -58,10 +59,24 @@ class App extends Component {
     })
   }
 
+  doLoading () {
+    this.setState({
+      loading: true
+    })
+  }
+
+  doneLoading () {
+    this.setState({
+      loading: false
+    })
+  }
+
   getAllCity () {
     const PRAY_TIME_URL = 'https://api.banghasan.com/sholat/format/json/kota'
+    this.doLoading()
     fetch(PRAY_TIME_URL)
     .then(result => {
+      this.doneLoading()
       if (result.status === 200) {
         return result.json()
       }
@@ -70,11 +85,39 @@ class App extends Component {
       let cities = []
       if (resultJson.kota && resultJson.kota.length > 0) {
         cities = resultJson.kota.map(k => {
-          return {label: k.nama, value: k.id}
+          return {label: k.nama.toLowerCase(), value: k.id}
         })
       }
       this.setState({ cities })
     })
+    // this.setState({
+    //   cities: [
+    //     {
+    //       label: 'Kota Semarang',
+    //       value: '123'
+    //     },
+    //     {
+    //       label: 'Kota Salatiga',
+    //       value: '456'
+    //     },
+    //     {
+    //       label: 'Kota Depok',
+    //       value: '124'
+    //     },
+    //     {
+    //       label: 'Bangka',
+    //       value: '231'
+    //     },
+    //     {
+    //       label: 'Belitung',
+    //       value: '532'
+    //     },
+    //     {
+    //       label: 'Sabang',
+    //       value: '573'
+    //     }
+    //   ]
+    // })
   }
 
   getCitiesByName (cityName = '') {
@@ -90,7 +133,7 @@ class App extends Component {
       let cities = []
       if (resultJson.kota && resultJson.kota.length > 0) {
         cities = resultJson.kota.map(k => {
-          return {label: k.nama, value: k.id}
+          return {label: k.nama.toLowerCase(), value: k.id}
         })
       }
       this.setState({ cities })
@@ -102,16 +145,18 @@ class App extends Component {
       city,
       cities,
       cityId,
-      filter
+      filter,
+      loading
     } = this.state
     return (
       <div className="App">
         <Form 
           onChange={this.handleChange.bind(this)}
-          city={city}
+          city={loading ? "Sedang memuat.." : city}
           cities={cities}
           cityId={cityId}
           filter={filter}
+          loading={loading}
         />
       </div>
     );
