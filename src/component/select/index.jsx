@@ -49,6 +49,11 @@ class Select extends PureComponent {
 
   handleFocus () {
     this.toggleDropDown(true)
+
+    // Make sure the component rendered before focusing
+    setTimeout(() => {
+      this.searchRef.focus()
+    }, 100)
   }
   
   render () {
@@ -73,7 +78,7 @@ class Select extends PureComponent {
           { valueLabel }
         </div>
         <div className={`select--dropdown${dropdown ? ' select--dropdown-active' : ''}`} ref={this.setWrapperRef}>
-          <input type="text" className="select--searchBox" placeholder={searchPlaceholder} onChange={onChange.bind(this)} value={filter}/>
+          <input type="text" className="select--searchBox" placeholder={searchPlaceholder} onChange={onChange.bind(this)} value={filter} ref={(input) => { this.searchRef = input }}/>
           <div className="select--items">
           {
             items
