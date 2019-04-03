@@ -74,6 +74,7 @@
         // opacity: 0;
         border: 2px solid transparent;
         border-top: none;
+        visibility: hidden;
 
         &-active {        
             border-top-left-radius: 0;
@@ -81,6 +82,7 @@
             border: 2px solid #686868;
             border-top: none;
             max-height: 180px;
+            visibility: visible;
             // opacity: 1;
         }
     }

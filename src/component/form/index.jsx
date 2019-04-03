@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 import "./styles.scss";
 
 import Select from "../select";
+import Button from "../button";
 
 class Form extends PureComponent {
   handleChange(field, e) {
@@ -13,6 +14,9 @@ class Form extends PureComponent {
     const { onChange } = this.props
     onChange(value, "cityId")
     onChange('', "filter")
+  }
+  handleClick () {
+    console.log("KLIK")
   }
   render() {
     const { city, cities, cityId, filter, loading } = this.props;
@@ -29,6 +33,7 @@ class Form extends PureComponent {
           searchPlaceholder="Cari Kota..."
           disabled={loading}
         />
+        <Button text="Atur Ulang" onClick={this.handleClick.bind(this)} />
       </div>
     );
   }
