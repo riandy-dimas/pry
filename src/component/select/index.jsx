@@ -74,8 +74,8 @@ class Select extends PureComponent {
         <div className="select--label">
           { label }
         </div>
-        <div className="select--valueLabel" onClick={this.handleFocus.bind(this)}>
-          { valueLabel }
+        <div className={`select--valueLabel${dropdown ? ' select--valueLabel-active' : ''}`} onClick={this.handleFocus.bind(this)}>
+          { valueLabel !== "" ? valueLabel : <span className="select--placeholder">- Pilih Kota -</span> }
         </div>
         <div className={`select--dropdown${dropdown ? ' select--dropdown-active' : ''}`} ref={this.setWrapperRef}>
           <input type="text" className="select--searchBox" placeholder={searchPlaceholder} onChange={onChange.bind(this)} value={filter} ref={(input) => { this.searchRef = input }}/>
