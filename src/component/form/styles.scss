@@ -12,4 +12,6 @@
   box-shadow: 0 10px 6px -6px #777;
   height: fit-content;
   box-sizing: border-box;
+  display: grid;
+  grid-row-gap: 10px;
 }

@@ -33,7 +33,7 @@ class Form extends PureComponent {
           searchPlaceholder="Cari Kota..."
           disabled={loading}
         />
-        <Button text="Atur Ulang" onClick={this.handleClick.bind(this)} />
+        <Button text="Atur Ulang" disabled={loading} onClick={this.handleClick.bind(this)} />
       </div>
     );
   }
